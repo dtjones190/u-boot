@@ -62,6 +62,7 @@
 /* Initial environment variables */
 #define CFG_EXTRA_ENV_SETTINGS \
 	"board=nitrogen-som\0" \
+	"imx_cpu=8ULP\0" \
 	"console=" BD_CONSOLE "\0" \
 	"env_dev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
 	"env_part=" __stringify(CONFIG_SYS_MMC_ENV_PART) "\0" \
