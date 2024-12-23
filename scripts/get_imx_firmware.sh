@@ -41,5 +41,6 @@ download_extract_imx_fw $FW_UPW
 # Copy firmware files
 cd -
 cp -v $FW_PATH/firmware-imx-*/firmware/ddr/synopsys/lpddr4_* .
+cp -v $FW_PATH/firmware-imx-*/firmware/hdmi/cadence/signed_* .
 cp -v $FW_PATH/firmware-ele-*/mx*img .
 cp -v $FW_PATH/firmware-upower-*/upower_a1.bin upower.bin
