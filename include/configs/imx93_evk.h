@@ -9,6 +9,7 @@
 #include <linux/sizes.h>
 #include <linux/stringify.h>
 #include <asm/arch/imx-regs.h>
+#include <version.h>
 #include "imx_env.h"
 
 #define CFG_SYS_UBOOT_BASE	\
@@ -82,7 +83,8 @@
 	"mmcpart=1\0" \
 	"mmcroot=/dev/mmcblk1p2 rootwait rw\0" \
 	"mmcautodetect=yes\0" \
-	"mmcargs=setenv bootargs ${jh_clk} ${mcore_clk} console=${console} root=${mmcroot}\0 " \
+	"mmcargs=setenv bootargs ${jh_clk} console=${console} root=${mmcroot} " \
+        "cur_slot=${bootslot} U-Boot_ver=${u-boot_version}\0"\
 	"loadbootscript=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; " \
 		"source\0" \
@@ -139,7 +141,30 @@
 				"fi; " \
 			"fi;" \
 		"fi;\0" \
+	"bootslot=dualA\0" \
+	"u-boot_version=null\0" \
+	"usb_port=1\0" \
+	"post_opt=saveenv;\0" \
+	"adjustbootsource=if test ${bootslot} = dualA || test ${bootslot} = singlenormal; then run adjustbootsourceA; fi;" \
+        "if test ${bootslot} = dualB; then run adjustbootsourceB; fi\0" \
+	"altbootusb=echo Boot Fail! Get into usb fastboot download.;fastboot usb ${usb_port}\0" \
+	"altbootsingle=if test ${bootslot} = singlerescue; then run altbootusb; fi; if test ${bootslot} = singlenormal; then run swuboot; fi\0" \
+	"adjustbootsourceB=echo RootFs Slot B; setenv mmcpart 3; setenv mmcroot /dev/mmcblk${mmcdev}p4 rootwait rw\0" \
+	"adjustbootsourceA=echo RootFs Slot A; setenv mmcpart 1; setenv mmcroot /dev/mmcblk${mmcdev}p2 rootwait rw\0" \
+	"altbootRollbackB=echo Rolling back to slot dualB;setenv bootslot dualB;run post_opt;run bootcmd\0" \
+	"altbootRollbackA=echo Rolling back to slot dualA;setenv bootslot dualA;run post_opt;run bootcmd\0" \
+	"altbootdual=if test ${bootslot} = dualA ; then run altbootRollbackB; fi; if test ${bootslot} = dualB ; then run altbootRollbackA; fi;\0" \
+	"swuargs=setenv bootargs console=${console},${baudrate} earlycon=${earlycon},${baudrate} " \
+        "cur_slot=${bootslot} U-Boot_ver=${u-boot_version}\0"\
+	"loadswuimage=mmc read  ${loadaddr} 0x4000 0x15000\0" \
+	"loadswufdt=mmc read  ${fdt_addr} 0x19000 0x200\0" \
+	"loadswuramdisk=mmc read  ${initrd_addr} 0x1B000 0x21000\0" \
+        "swuboot=echo swuboot ramdisk;run loadswuimage;run loadswufdt;run loadswuramdisk;run swuargs;booti ${loadaddr} ${initrd_addr} ${fdt_addr}\0" \
+        "altbootcmd=if test ${bootslot} = singlerescue ||  test ${bootslot} = singlenormal; then run altbootsingle; fi;" \
+	"if test ${bootslot} = dualA ||  test ${bootslot} = dualB; then run altbootdual; fi\0" \
 	"bsp_bootcmd=echo Running BSP bootcmd ...; " \
+	   "if test ${bootslot} = singlerescue;then run swuboot; fi;" \
+	   "run adjustbootsource;" \
 		"mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \

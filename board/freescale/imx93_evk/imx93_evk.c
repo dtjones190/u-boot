@@ -21,6 +21,7 @@
 #include <usb.h>
 #include <dwc3-uboot.h>
 #include <asm/gpio.h>
+#include <timestamp.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -332,6 +333,7 @@ int board_late_init(void)
 	env_set("board_name", "11X11_EVK");
 	env_set("board_rev", "iMX93");
 #endif
+	env_set("u-boot_version", PLAIN_VERSION"("U_BOOT_DATE"-"U_BOOT_TIME")");
 	return 0;
 }
 
