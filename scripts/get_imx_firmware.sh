@@ -4,7 +4,7 @@
 
 FW_PATH=$PWD/.fw
 FW_IMX=firmware-imx-8.25-27879f8
-FW_ELE=firmware-ele-imx-0.1.3-4b30ee5
+FW_ELE=firmware-ele-imx-1.3.0-17945fc
 FW_UPW=firmware-upower-1.3.1
 NXP_DL=http://www.nxp.com/lgfiles/NMG/MAD/YOCTO/
 
