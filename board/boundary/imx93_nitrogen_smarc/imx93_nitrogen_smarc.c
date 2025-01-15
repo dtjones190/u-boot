@@ -19,6 +19,8 @@
 #include <usb.h>
 #include <dwc3-uboot.h>
 #include <asm/gpio.h>
+#include <timestamp.h>
+#include <version.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -102,6 +104,6 @@ int board_late_init(void)
 		printf("serial %s\n", serialbuf);
 		env_set("serial#", serialbuf);
 	}
-
+  env_set("u-boot_version", PLAIN_VERSION"("U_BOOT_DATE"-"U_BOOT_TIME")");
 	return 0;
 }
