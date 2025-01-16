@@ -105,7 +105,7 @@
 	"bsp_bootcmd=echo Running BSP bootcmd ...; " \
 	   "if test ${bootslot} = singlerescue;then run swuboot; fi;" \
 	   "run adjustbootsource;" \
-		"mmc dev ${mmcdev}; if mmc rescan; then " \
+		 "mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
 		   "else " \
