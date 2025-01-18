@@ -79,7 +79,32 @@
 		"fi;\0" \
 	"upgradeu=setenv boot_scripts upgrade.scr; boot;" \
                 "echo Upgrade failed!; setenv boot_scripts boot.scr;\0" \
-	"uboot_defconfig=" NITROGEN_SMARC_DEFCONFIG "\0"
+	"uboot_defconfig=" NITROGEN_SMARC_DEFCONFIG "\0" \
+	"boot_slot=1\0 " \
+	"boot_swupdate=" \
+	"  setenv prefix /;" \
+	"  setenv script boot.scr;" \
+	"  setenv devnum 0;" \
+	"  setenv devtype mmc;" \
+	"  if test ${boot_slot} = 2; then " \
+	"    setenv distro_bootpart 3; " \
+	"    setenv bpart 4; " \
+	"  else " \
+	"    setenv distro_bootpart 1; " \
+	"    setenv bpart 2; " \
+	"  fi; " \
+	"  echo Booting from slot ${boot_slot}; " \
+	"  echo Boot part: ${distro_bootpart} Root part: ${bpart}; " \
+	"  run boot_a_script\0" \
+	"altbootcmd=" \
+	"  echo Rollback to previous slot; " \
+	"  if test ${boot_slot} = 2; then " \
+	"    setenv boot_slot 1; " \
+	"  else " \
+	"    setenv boot_slot 2; " \
+	"  fi; setenv bootcount 0; saveenv; " \
+	"  bootcmd\0" \
+	"bootcmd=run boot_swupdate;\0"
 /* Link Definitions */
 
 #define CFG_SYS_INIT_RAM_ADDR        0x80000000
