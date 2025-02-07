@@ -88,7 +88,7 @@
 	"  setenv devtype mmc;" \
 	"  if test ${boot_slot} = 2; then " \
 	"    setenv distro_bootpart 3; " \
-	"    setenv bpart 4; " \
+	"    setenv bpart 5; " \
 	"  else " \
 	"    setenv distro_bootpart 1; " \
 	"    setenv bpart 2; " \
